@@ -36,7 +36,7 @@ void showHelp( program )
 char *program;
 {
   system( "clear" );
-  fprintf( stdout, "%s -q -b < blkdSize > -t < tempFile >\n\n", program );
+  fprintf( stdout, "%s -q -b < blkdSize > [ tempFile ]\n\n", program );
   fprintf( stdout, "   Description: \n" );
   fprintf( stdout, "\n" );
   fprintf( stdout, "      A simple command line tool that fills FREE space on a disk with zeroes by\n" );
@@ -56,7 +56,7 @@ char *program;
   fprintf( stdout, "   %s recognizes the following options:\n\n", program );
   fprintf( stdout, "       -q => No progress report during zeroing, a bit faster\n" );
   fprintf( stdout, "       -b < blkSize > => Amount of zeroes to write at each pass. Default: %u\n", DEFAULT_BLKSIZE );
-  fprintf( stdout, "       -t < tempFilename > => Temporary file used. Defaults to: %s\n", DEFAULT_TMP_FILENAME );
+  fprintf( stdout, "       [ tempFilename ] => Temporary file used. Defaults to: %s\n", DEFAULT_TMP_FILENAME );
 
 }
 
@@ -87,7 +87,7 @@ extern char *optarg;
 extern int optind;
 
   // Check for options passed in
-  while ( ( opt = getopt( *argc, argv, "hqb:t:" ) ) != -1 )
+  while ( ( opt = getopt( *argc, argv, "hqb:" ) ) != -1 )
   {
      switch ( opt )
      {
@@ -108,11 +108,6 @@ extern int optind;
             }
 
             break;
-        case 't':
-            // Temp-file selection
-            tmpFilename = argv[ optind ];
-
-            break;
         case '?':
         default:
             showHelp( argv[ 0 ] );
@@ -121,6 +116,10 @@ extern int optind;
             exit( 666 );
       }
    }
+
+   // Temp-file selection
+   if ( *argc > optind )
+      tmpFilename = argv[ optind ];
 }
 
 // Cleanup, remove tempfile
@@ -235,5 +234,9 @@ char* bunchOfZeroes;
    fprintf( stdout, "Duration: %f ; Performance: %.3f bytes/sec\n",
       diff_t,
       totalBytesWritten / diff_t );
+
+   cleanup( );
+
+   exit( 0 );
 }
 
