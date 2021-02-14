@@ -1,0 +1,21 @@
+# Mac
+.DS_Store
+
+# Text editors
+*.swp
+
+# My favorite temp backup
+*.save*
+*_save*
+*_bak*
+
+# Compiled Executables
+zerofile
+
+# node
+node_modules
+npm-debug.log
+.node-version
+
+# work in progress folder
+local
